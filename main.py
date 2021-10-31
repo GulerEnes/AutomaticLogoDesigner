@@ -1,11 +1,9 @@
-import time
-
 import cv2 as cv
 import numpy as np
 import random
 import math
 from gensim.models import Word2Vec
-
+import easygui as eg
 
 
 def flatten(l):
@@ -55,13 +53,15 @@ def isareavalid(img, *points_):
 # 	words = set(f.readlines()[:])
 
 model = Word2Vec.load('word2vec.model')
-words = [i[0] for i in model.wv.most_similar(input("key word: "), topn=100)]
+keyword = eg.enterbox("Key Word: ", title="Keyword input")
+
+words = [i[0] for i in model.wv.most_similar(keyword, topn=100)]
 words = words[::-1]
 print(words)
 h, w, c = 2000, 2000, 3
 img = np.zeros(shape=[h, w, c], dtype=np.uint8)
 
-angles = [90, -90, 0, 0, 0, 0,]
+angles = [90, -90, 0, 0, 0, 0]
 while len(words) != 0:
 
 	word_ = words.pop()
@@ -122,4 +122,5 @@ while len(words) != 0:
 cv.imshow("img", img)
 
 cv.waitKey()
-cv.imwrite("engineer_150.png", img)
+outputfilename = eg.enterbox(msg="Output file name: ", title="Output File Name")
+cv.imwrite(outputfilename + '.png', img)
